@@ -1,0 +1,23 @@
+<html>
+  <body>
+    <script>
+    create = function(){
+      var b = document.getElementById('b')
+      b.disabled = true
+      var inp = document.getElementById('n')
+      
+      var n = parseFloat(inp.value)
+      for (var i=0;i<n;i++)
+    	  new WebSocket('ws://localhost/openbravo/ws/chat')
+      alert('created '+n+' clients!')
+      b.disabled=false
+      
+    }
+    </script>
+    
+    <div>Create #of clients</div>
+    <input id ="n" value="10">
+    <button id="b" onclick="create()">create</button>
+  </body>
+</html>
+

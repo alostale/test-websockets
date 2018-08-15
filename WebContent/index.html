@@ -1,0 +1,39 @@
+<html>
+  <script>
+    chatClient =  new WebSocket('ws://localhost/openbravo/ws/chat')
+    chatClient.onmessage = function(msg){
+      printMsg(msg.data)
+    }
+    
+    printMsg = function(msg) {
+    	var now = new Date(); 
+      var txt = document.getElementById('txt');
+      txt.innerHTML += '[' + now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds() + '.'+ now.getMilliseconds()+ '] ' + msg + '<br>'
+      txt.scrollTop = txt.scrollHeight;
+    }
+    
+    sendMsg = function (msg){
+      printMsg('<i>me:</i> ' + msg)
+      chatClient.send(msg)
+    }
+    
+    checkToSend = function(e){
+    	if (e.keyCode == 13) {
+            sendMsg(document.getElementById('msg').value)
+            document.getElementById('msg').value = ''
+            return false;
+        }
+    	return true;
+    }
+  </script>
+  <body>
+    <div id="txt" 
+         style="display: block;
+                width:100%;
+                height:300px;
+                background-color: #c7c7c7;
+                overflow:scroll;"></div>
+    <input id="msg" onkeypress="return checkToSend(event)" style="width:100%;"></input>
+  </body>
+</html>
+
