@@ -1,6 +1,7 @@
 package org.alo.test.ws;
 
 import java.io.IOException;
+import java.time.LocalTime;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.websocket.OnClose;
@@ -17,17 +18,16 @@ public class EchoWs {
 
 	@OnOpen
 	public void onOpen(Session s) {
-
-		System.out.println("Open Connection " + s.getId());
+		log("Open Connection " + s.getId() + " total: " + (clients.size() + 1));
 		clients.put(s, DUMMY);
-		broadcast("new session (" + clients.size() + " active now)", s);
+		// broadcast("new session (" + clients.size() + " active now)", s);
 	}
 
 	@OnClose
 	public void onClose(Session s) {
-		System.out.println("Close Connection" + s.getId());
+		log("Close Connection " + s.getId() + " total: " + (clients.size() - 1));
 		clients.remove(s);
-		broadcast("closed session (" + clients.size() + " active now)", s);
+		// broadcast("closed session (" + clients.size() + " active now)", s);
 	}
 
 	@OnMessage
@@ -36,7 +36,7 @@ public class EchoWs {
 	}
 
 	private void broadcast(String message, Session s) {
-		System.out.println("broadcasting [" + message + "] from session: " + s.getId() + " to " + (clients.size() - 1)
+		log("broadcasting [" + message + "] from session: " + s.getId() + " to " + (clients.size() - 1)
 				+ " other sessions");
 		String msg = s.getId() + ": " + message;
 		long t = System.currentTimeMillis();
@@ -49,25 +49,26 @@ public class EchoWs {
 				}
 			} catch (Exception e) {
 				try {
-					System.out
-							.println("closing other session " + s.getId() + " due to error " + e.getClass().getName());
+					log("closing other session " + s.getId() + " due to error " + e.getClass().getName());
 					clients.remove(otherSession);
 					otherSession.close();
 
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 
 			}
 		}
-		System.out.println("  broadcasted to " + (clients.size() - 1) + " sessions in "
-				+ (System.currentTimeMillis() - t) + " ms");
+		log("  broadcasted to " + (clients.size() - 1) + " sessions in " + (System.currentTimeMillis() - t) + " ms");
 	}
 
 	@OnError
 	public void onError(Throwable e) {
-		System.out.println("Error !");
+		log("Error!!");
 		e.printStackTrace();
+	}
+
+	private void log(String msg) {
+		System.out.println("[" + LocalTime.now() + " - " + Thread.currentThread().getName() + "] " + msg);
 	}
 }
