@@ -1,6 +1,6 @@
 <html>
   <script>
-    chatClient =  new WebSocket('ws://localhost/openbravo/ws/chat')
+    chatClient =  new WebSocket('ws://'+window.location.host+'/openbravo/ws/chat')
     chatClient.onmessage = function(msg){
       printMsg(msg.data)
     }

@@ -9,7 +9,7 @@
       
       var n = parseFloat(inp.value)
       for (var i=0;i<n;i++) {
-    	  allClients.push(new WebSocket('ws://localhost/openbravo/ws/chat'))
+    	  allClients.push(new WebSocket('ws://'+window.location.host+'/openbravo/ws/chat'))
       }
       alert('created '+n+' clients!')
       b.disabled=false
